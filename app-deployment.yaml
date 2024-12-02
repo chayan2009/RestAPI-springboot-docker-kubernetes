@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: springboot-crud-deployment
+  labels:
+    app: restapi-springboot-docker-kubernetes
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: restapi-springboot-docker-kubernetes
+  template:
+    metadata:
+      labels:
+        app: restapi-springboot-docker-kubernetes
+    spec:
+      containers:
+        - name: restapi-springboot-docker-kubernetes
+          image: restapi-springboot-docker-kubernetes:1.0
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DB_HOST
+              value: mysql  # MySQL service name, change if needed
+            - name: DB_NAME
+              value: dbs    # Your database name
+            - name: DB_USERNAME
+              value: root   # Set to root username
+            - name: DB_PASSWORD
+              value: root   # Set to root password
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: springboot-crud-svc
+spec:
+  selector:
+    app: restapi-springboot-docker-kubernetes
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+      nodePort: 30700  # Updated to an unused port
+  type: NodePort
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+spec:
+  selector:
+    app: mysql
+  ports:
+    - port: 3306
+      targetPort: 3306
+  clusterIP: None  # Ensures direct DNS access within the cluster

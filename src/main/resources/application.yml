@@ -1,0 +1,24 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://springboot-crud-svc:3306/dbs?allowPublicKeyRetrieval=true&useSSL=false
+    username: root
+    password: root
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+      idle-timeout: 30000
+      connection-timeout: 30000
+      initialization-fail-timeout: 0
+      leak-detection-threshold: 2000
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    generate-ddl: true
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+logging:
+  level:
+    root: INFO
+    com.zaxxer.hikari: DEBUG
+    org.hibernate: DEBUG
